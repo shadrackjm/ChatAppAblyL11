@@ -1,5 +1,8 @@
 <x-app-layout>
   {{-- paste the code here --}}
+  @php
+      $loggedIn_userId = auth()->user()->id;
+  @endphp
   <!-- ========== MAIN CONTENT ========== -->
 <!-- Breadcrumb -->
 <div class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 md:px-8 lg:hidden dark:bg-neutral-800 dark:border-neutral-700">
@@ -48,9 +51,9 @@
   </div>
 
   <nav class="hs-accordion-group p-6 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
-    <ul class="space-y-1.5">
+    <ul class="space-y-1.5" id="user-list">
         @foreach ($all_users as $user)
-            <li>
+            <li  data-id="{{$user->id}}">
                 <a class="flex items-center gap-x-3.5 py-2 px-2.5  text-sm text-neutral-700 rounded-lg hover:bg-gray-100 dark:bg-neutral-700 dark:text-white" href="#">
                 <img src="https://ui-avatars.com/api/?name={{$user->name}}&rounded=true&background=random" alt="" height="30px" width="30px">
                 {{$user->name}}
@@ -68,34 +71,16 @@
     <div class="flex flex-col bg-white border border-gray-200 shadow-sm rounded-xl p-4 md:p-5 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
         <!-- here messages will be published  -->
         <!-- Chat Bubble -->
-        <ul class="space-y-5">
+        <ul class="space-y-5" id="chat-container">
         <!-- Chat -->
         <li class="max-w-lg flex gap-x-2 sm:gap-x-4 me-11">
             <img class="inline-block size-9 rounded-full" src="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&&auto=format&fit=facearea&facepad=3&w=300&h=300&q=80" alt="Image Description">
 
             <!-- Card -->
             <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3 dark:bg-neutral-900 dark:border-neutral-700">
-            <h2 class="font-medium text-gray-800 dark:text-white">
-                How can we help?
-            </h2>
-            <div class="space-y-1.5">
-                <p class="mb-1.5 text-sm text-gray-800 dark:text-white">
-                You can ask questions like:
-                </p>
-                <ul class="list-disc list-outside space-y-1.5 ps-3.5">
-                <li class="text-sm text-gray-800 dark:text-white">
-                    What's Preline UI?
-                </li>
-
-                <li class="text-sm text-gray-800 dark:text-white">
-                    How many Starter Pages & Examples are there?
-                </li>
-
-                <li class="text-sm text-gray-800 dark:text-white">
-                    Is there a PRO version?
-                </li>
-                </ul>
-            </div>
+              <h2 class="font-medium text-gray-800 dark:text-white">
+                  How can we help?
+              </h2>
             </div>
             <!-- End Card -->
         </li>
@@ -119,44 +104,16 @@
         </li>
         <!-- End Chat -->
 
-        <!-- Chat Bubble -->
-        <li class="max-w-lg flex gap-x-2 sm:gap-x-4 me-11">
-            <img class="inline-block size-9 rounded-full" src="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&&auto=format&fit=facearea&facepad=3&w=300&h=300&q=80" alt="Image Description">
-
-            <!-- Card -->
-            <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3 dark:bg-neutral-900 dark:border-neutral-700">
-            <p class="text-sm text-gray-800 dark:text-white">
-                Preline UI is an open-source set of prebuilt UI components based on the utility-first Tailwind CSS framework.
-            </p>
-            <div class="space-y-1.5">
-                <p class="text-sm text-gray-800 dark:text-white">
-                Here're some links to get started
-                </p>
-                <ul>
-                <li>
-                    <a class="text-sm text-blue-600 decoration-2 hover:underline font-medium dark:text-blue-500 dark:hover:text-blue-400" href="../docs/index.html">
-                    Installation Guide
-                    </a>
-                </li>
-                <li>
-                    <a class="text-sm text-blue-600 decoration-2 hover:underline font-medium dark:text-blue-500 dark:hover:text-blue-400" href="../docs/frameworks.html">
-                    Framework Guides
-                    </a>
-                </li>
-                </ul>
-            </div>
-            </div>
-            <!-- End Card -->
-        </li>
+        
         <!-- End Chat Bubble -->
         </ul>
         <!-- End Chat Bubble -->
 
         {{-- here the input and button --}}
-        <div class="relative">
+        <div class="relative mt-5">
             <div class="flex">
                 <input type="text" id="msg-input" class="peer py-3 px-4 pr-12 block w-full bg-gray-200 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter your message">
-                <button type="button" onclick="sendMessage(currentChannel)" class="peer absolute inset-y-0 right-0 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 text-white font-semibold py-2 px-3 rounded-r-lg shadow-md">
+                <button type="button" class="peer absolute inset-y-0 right-0 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 text-white font-semibold py-2 px-3 rounded-r-lg shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
                         <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
                     </svg>
@@ -167,4 +124,95 @@
 </div>
 <!-- End Content -->
 <!-- ========== END MAIN CONTENT ========== -->
+
+<script>
+   var ably = new Ably.Realtime.Promise({
+      key: 'sdqQlA.q7MlCA:6oSUNmCKLiEZB2edOso0QEaZdCJ9DCHFx1R36A2Woxw' //here pass your API key that we created on the ably Account
+   });
+
+    // i declare this as global
+    var recipientId = null;
+    // declare the global currentChannel
+    var currentChannel = null;
+
+  ably.connection.on((stateChange) => {
+      console.log(stateChange.current);
+  });
+
+  //get the logged in user id
+  var login_userId = '<?php echo $loggedIn_userId; ?>';
+
+  // console.log(login_userId);
+
+  // get the list of users
+  var UserList = $('#user-list');
+
+  UserList.on('click','li',function(){
+    recipientId = $(this).attr('data-id');
+    console.log(recipientId);
+
+    // let's show the selected user by adding a background color
+    UserList.find('li').removeClass('selected-user');
+
+    $(this).addClass('selected-user');
+
+    // Perform AJAX call to check if the channel exists in the database
+        $.ajax({
+            url: '/check-channel',
+            method: 'GET',
+            data: { recipientId: recipientId },
+            success: function (response) {
+                if (response.channelExists) {
+                    // Channel exists, get the channel name from the response
+                    var channelName = response.channelName;
+
+                    // Subscribe to the existing channel
+                    subscribeToChannel(channelName); //let's create this function
+                } else {
+                    // Channel doesn't exist, create a new one
+                    createNewChannel(recipientId); //now create this function
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+
+  });
+
+  function subscribeToChannel(channelName) {
+    // Unsubscribe from the current channel if it exists
+    if (currentChannel) {
+        currentChannel.unsubscribe();
+    }
+    // Get the channel for this conversation pair
+    currentChannel = ably.channels.get(channelName);
+    // console.log(currentChannel);
+    currentChannel.subscribe(function (message) {
+        displayMessage(message,recipientName);
+    });
+
+    // Show the chat container
+    $('#chat-container').html('');
+}
+
+function createNewChannel(recipientId) {
+    // Perform AJAX call to create a new channel
+    $.ajax({
+        url: '/create-channel',
+        method: 'GET',
+        data: { recipientId: recipientId },
+        success: function (response) {
+            if(response.success == true)
+            // Subscribe to the newly created channel
+            subscribeToChannel(response.channelName);
+            else 
+            console.log(response.error);
+        },
+        
+    });
+}
+
+</script>
 </x-app-layout>

@@ -16,6 +16,9 @@ Route::get('/dashboard',[ChatController::class,'loadDashboard'])
 ->middleware(['auth', 'verified'])
 ->name('dashboard');
 
+Route::get('/check-channel',[ChatController::class,'CheckChannel'])->middleware(['auth', 'verified']);
+Route::get('/create-channel',[ChatController::class,'CreateChannel'])->middleware(['auth', 'verified']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
