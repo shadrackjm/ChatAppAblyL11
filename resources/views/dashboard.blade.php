@@ -104,7 +104,7 @@
 
 <script>
    var ably = new Ably.Realtime.Promise({
-      key: 'sdqQlA.q7MlCA:6oSUNmCKLiEZB2edOso0QEaZdCJ9DCHFx1R36A2Woxw' //here pass your API key that we created on the ably Account
+      key: 'here pass your API key that we created on the ably Account'
    });
 
     // i declare this as global
